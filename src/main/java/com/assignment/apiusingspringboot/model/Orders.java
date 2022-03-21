@@ -20,4 +20,16 @@ public class Orders {
     private String productTitle;
     private String productDescription;
     private LocalDateTime date;
+
+    @Override
+    public String toString() {
+        return "OrderStats{" +
+                "name='" + name + '\'' +
+                ", country='" + country + '\'' +
+                ", address='" + address + '\'' +
+                ", productTitle='" + productTitle + '\'' +
+                ", productDescription='" + productDescription + '\'' +
+                ", date='" + date + '\'' +
+                '}';
+    }
 }
