@@ -1,9 +1,9 @@
 package com.assignment.apiusingspringboot.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.assignment.apiusingspringboot.model.Orders;
 import com.assignment.apiusingspringboot.service.OrderService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,14 @@ import java.util.List;
 public class OrderController {
     Logger logger = LoggerFactory.getLogger(OrderController.class);
     private static String DATA_URL = "https://my-json-server.typicode.com/Ved-X/assignment/orders";
-//    @Autowired
+
     private OrderService orderService;
+
+    @Autowired
+    public OrderController(OrderService orderService){
+        this.orderService = orderService;
+    }
+
 
     @GetMapping("/getOrder")
     public ResponseEntity<List<Orders>> getOrder(){
@@ -41,8 +47,16 @@ public class OrderController {
         return orderStats;
     }
 
+    @PutMapping("/updateOrder/{orderid}")
+    public ResponseEntity<List<Orders>> updateOrder(@PathVariable Integer orderid) {
+        orderService.updateOrder(orderid);
+        List<Orders> updatedOrder = orderService.getOrder(orderid);
+        return new ResponseEntity<List<Orders>>(updatedOrder, HttpStatus.OK);
+    }
+
     @PostMapping("/createOrder")
     public ResponseEntity<Orders> createOrder(@RequestBody Orders orders){
+        System.out.println("started");
         Orders saveOrder=orderService.placeOrder(orders);
         System.out.println(saveOrder);
         return new ResponseEntity<>(saveOrder, HttpStatus.CREATED);
