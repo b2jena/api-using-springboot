@@ -8,11 +8,12 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ApiUsingSpringbootApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(ApiUsingSpringbootApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ApiUsingSpringbootApplication.class, args);
+    }
+
     @Bean
-    public OrderService orderService(){
+    public OrderService orderService() {
         return new OrderServiceImpl();
     }
 }

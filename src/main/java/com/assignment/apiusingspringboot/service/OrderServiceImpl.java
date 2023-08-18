@@ -25,14 +25,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Orders placeOrder(Orders orders){
+    public Orders placeOrder(Orders orders) {
         try {
             orders.setDate(LocalDateTime.now());
             System.out.println(orders.toString());
             orderRepository.save(orders);
             System.out.println("saved");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(String.valueOf(e));
         }
         return orderRepository.save(orders);
@@ -46,19 +45,19 @@ public class OrderServiceImpl implements OrderService {
                         .where("orderId")
                         .is(id)
         );
-        List<Orders> order = mongoTemplate.find (query, Orders.class);
+        List<Orders> order = mongoTemplate.find(query, Orders.class);
         return order;
     }
 
     @Override
-    public List<Orders> getAllOrders(){
+    public List<Orders> getAllOrders() {
         return (List<Orders>) orderRepository.findAll();
     }
 
     @Override
-    public void updateOrder(Integer orderId){
+    public void updateOrder(Integer orderId) {
         Query query = new Query(Criteria.where("orderId").is(orderId));
-        System.out.println("Order ID = "+orderId);
+        System.out.println("Order ID = " + orderId);
         Update updateQuery = new Update();
         updateQuery.set("orderStatus", "Delivered");
         mongoTemplate.upsert(query, updateQuery, Orders.class);

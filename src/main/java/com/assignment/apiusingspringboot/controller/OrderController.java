@@ -4,6 +4,7 @@ import com.assignment.apiusingspringboot.model.Orders;
 import com.assignment.apiusingspringboot.service.OrderService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,25 +20,27 @@ import java.util.List;
 @RequestMapping("api/v1/")
 @CrossOrigin(value = "*")
 public class OrderController {
-    Logger logger = LoggerFactory.getLogger(OrderController.class);
     private static String DATA_URL = "https://my-json-server.typicode.com/Ved-X/assignment/orders";
-
+    Logger logger = LoggerFactory.getLogger(OrderController.class);
     private OrderService orderService;
 
     @Autowired
-    public OrderController(OrderService orderService){
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
 
     @GetMapping("/getOrder")
-    public ResponseEntity<List<Orders>> getOrder(){
-        return new ResponseEntity<List<Orders>>(orderService.getAllOrders(),HttpStatus.OK);
+    public ResponseEntity<List<Orders>> getOrder() {
+        Exception ex = new ArithmeticException();
+        logger.debug("Log check: " + Encode.forJava(ex.toString()));
+        logger.debug("Log check: " + Encode.forJava(orderService.getAllOrders().toString()));
+        return new ResponseEntity<List<Orders>>(orderService.getAllOrders(), HttpStatus.OK);
     }
 
     @GetMapping("/orderInformation")
     public Orders[] getData() throws IOException {
-        JsonNode jsonNode =new ObjectMapper().readTree(new URL(DATA_URL));
+        JsonNode jsonNode = new ObjectMapper().readTree(new URL(DATA_URL));
         JsonNode regional = jsonNode.get("data").get("regional");
 
         logger.info("hi, this is orderInformation");
@@ -55,9 +58,9 @@ public class OrderController {
     }
 
     @PostMapping("/createOrder")
-    public ResponseEntity<Orders> createOrder(@RequestBody Orders orders){
+    public ResponseEntity<Orders> createOrder(@RequestBody Orders orders) {
         System.out.println("started");
-        Orders saveOrder=orderService.placeOrder(orders);
+        Orders saveOrder = orderService.placeOrder(orders);
         System.out.println(saveOrder);
         return new ResponseEntity<>(saveOrder, HttpStatus.CREATED);
     }
