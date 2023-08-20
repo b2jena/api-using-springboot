@@ -23,15 +23,15 @@ public class Orders {
     private String productDescription;
     private LocalDateTime date = LocalDateTime.now();
 
-//    @Override
-//    public String toString() {
-//        return "OrderStats{" +
-//                "name='" + name + '\'' +
-//                ", country='" + country + '\'' +
-//                ", address='" + address + '\'' +
-//                ", productTitle='" + productTitle + '\'' +
-//                ", productDescription='" + productDescription + '\'' +
-//                ", date='" + date + '\'' +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "OrderStats{" +
+                "name='" + name + '\'' +
+                ", country='" + country + '\'' +
+                ", address='" + address + '\'' +
+                ", productTitle='" + productTitle + '\'' +
+                ", productDescription='" + productDescription + '\'' +
+                ", date='" + date + '\'' +
+                '}';
+    }
 }

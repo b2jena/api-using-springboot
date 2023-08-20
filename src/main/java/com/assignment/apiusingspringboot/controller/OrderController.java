@@ -20,9 +20,9 @@ import java.util.List;
 @RequestMapping("api/v1/")
 @CrossOrigin(value = "*")
 public class OrderController {
-    private static String DATA_URL = "https://my-json-server.typicode.com/Ved-X/assignment/orders";
+    private static final String DATA_URL = "https://my-json-server.typicode.com/Ved-X/assignment/orders";
     Logger logger = LoggerFactory.getLogger(OrderController.class);
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @Autowired
     public OrderController(OrderService orderService) {

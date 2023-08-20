@@ -28,11 +28,11 @@ public class OrderServiceImpl implements OrderService {
     public Orders placeOrder(Orders orders) {
         try {
             orders.setDate(LocalDateTime.now());
-            System.out.println(orders.toString());
+            System.out.println(orders);
             orderRepository.save(orders);
             System.out.println("saved");
         } catch (Exception e) {
-            System.out.println(String.valueOf(e));
+            System.out.println(e);
         }
         return orderRepository.save(orders);
     }
@@ -51,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Orders> getAllOrders() {
-        return (List<Orders>) orderRepository.findAll();
+        return orderRepository.findAll();
     }
 
     @Override
