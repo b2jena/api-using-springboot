@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,17 +19,19 @@ public class Orders {
     private String address;
     private String productTitle;
     private String productDescription;
-    private LocalDateTime date = LocalDateTime.now();
+//    private LocalDateTime date = LocalDateTime.now();
+
 
     @Override
     public String toString() {
-        return "OrderStats{" +
-                "name='" + name + '\'' +
+        return "Orders{" +
+                "orderId=" + orderId +
+                ", orderStatus='" + orderStatus + '\'' +
+                ", name='" + name + '\'' +
                 ", country='" + country + '\'' +
                 ", address='" + address + '\'' +
                 ", productTitle='" + productTitle + '\'' +
                 ", productDescription='" + productDescription + '\'' +
-                ", date='" + date + '\'' +
                 '}';
     }
 }

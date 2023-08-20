@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,8 +26,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Orders placeOrder(Orders orders) {
         try {
-            orders.setDate(LocalDateTime.now());
-            System.out.println(orders);
+//            orders.setDate(LocalDateTime.now());
+//            System.out.println(orders);
             orderRepository.save(orders);
             System.out.println("saved");
         } catch (Exception e) {

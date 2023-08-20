@@ -21,8 +21,8 @@ import java.util.List;
 @CrossOrigin(value = "*")
 public class OrderController {
     private static final String DATA_URL = "https://my-json-server.typicode.com/Ved-X/assignment/orders";
-    Logger logger = LoggerFactory.getLogger(OrderController.class);
     private final OrderService orderService;
+    Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     public OrderController(OrderService orderService) {
