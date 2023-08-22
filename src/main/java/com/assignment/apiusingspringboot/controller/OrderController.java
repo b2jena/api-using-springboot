@@ -1,10 +1,13 @@
 package com.assignment.apiusingspringboot.controller;
 
+import com.assignment.apiusingspringboot.model.LocationStatistics;
 import com.assignment.apiusingspringboot.model.Orders;
+import com.assignment.apiusingspringboot.model.Products;
 import com.assignment.apiusingspringboot.service.OrderService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.owasp.encoder.Encode;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,48 +23,79 @@ import java.util.List;
 @RequestMapping("api/v1/")
 @CrossOrigin(value = "*")
 public class OrderController {
-    private static final String DATA_URL = "https://my-json-server.typicode.com/Ved-X/assignment/orders";
-    private final OrderService orderService;
+    private static final String ORDER_DATA_URL = "https://my-json-server.typicode.com/Ved-X/assignment/orders";
+    private static final String VIRUS_DATA_URL = "https://api.rootnet.in/covid19-in/stats/latest";
+    @Autowired
+    OrderService orderService;
     Logger logger = LoggerFactory.getLogger(OrderController.class);
 
-    @Autowired
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    @GetMapping("/")
+    public String index() {
+        logger.trace("A TRACE Message");
+        logger.debug("A DEBUG Message");
+        logger.info("An INFO Message");
+        logger.warn("A WARN Message");
+        logger.error("An ERROR Message");
 
+        return "Howdy! Check out the Logs to see the output...";
+    }
 
     @GetMapping("/getOrder")
     public ResponseEntity<List<Orders>> getOrder() {
-        Exception ex = new ArithmeticException();
-        logger.debug("Log check: " + Encode.forJava(ex.toString()));
-        logger.debug("Log check: " + Encode.forJava(orderService.getAllOrders().toString()));
-        return new ResponseEntity<List<Orders>>(orderService.getAllOrders(), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getOrder/{orderId}")
+    public Orders getOrderById(@PathVariable String orderId) {
+        return orderService.getOrderById(orderId);
     }
 
     @GetMapping("/orderInformation")
-    public Orders[] getData() throws IOException {
-        JsonNode jsonNode = new ObjectMapper().readTree(new URL(DATA_URL));
-        JsonNode regional = jsonNode.get("data").get("regional");
+    public Products[] getOrderData() throws IOException {
+        JsonNode jsonNode = new ObjectMapper().readTree(new URL(ORDER_DATA_URL));
 
-        logger.info("hi, this is orderInformation");
+        logger.info("orderInformation...");
         ObjectMapper mapper = new ObjectMapper();
 
-        Orders[] orderStats = mapper.treeToValue(regional, Orders[].class);
-        return orderStats;
+        Products[] prodStats = mapper.treeToValue(jsonNode, Products[].class);
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson gson = builder.create();
+        logger.info(gson.toJson(prodStats));
+        return prodStats;
     }
 
-    @PutMapping("/updateOrder/{orderid}")
-    public ResponseEntity<List<Orders>> updateOrder(@PathVariable Integer orderid) {
-        orderService.updateOrder(orderid);
-        List<Orders> updatedOrder = orderService.getOrder(orderid);
-        return new ResponseEntity<List<Orders>>(updatedOrder, HttpStatus.OK);
+    @GetMapping("/covidInformation")
+    public LocationStatistics[] getCovidData() throws IOException {
+        JsonNode jsonNode = new ObjectMapper().readTree(new URL(VIRUS_DATA_URL));
+        JsonNode regional = jsonNode.get("data").get("regional");
+
+        logger.info("COVID location information");
+        ObjectMapper mapper = new ObjectMapper();
+        LocationStatistics[] locationStatistics = mapper.treeToValue(regional, LocationStatistics[].class);
+        return locationStatistics;
+    }
+
+    @PutMapping("/updateOrder/{orderId}")
+    public ResponseEntity<Orders> updateOrder(@RequestBody Orders order) {
+        orderService.updateOrder(order);
+        Orders updatedOrder = orderService.getOrderById(order.getOrder_id());
+        return new ResponseEntity<>(updatedOrder, HttpStatus.CREATED);
     }
 
     @PostMapping("/createOrder")
     public ResponseEntity<Orders> createOrder(@RequestBody Orders orders) {
-        System.out.println("started");
+        logger.info("started creating an order...");
         Orders saveOrder = orderService.placeOrder(orders);
-        System.out.println(saveOrder);
+        logger.info("Order saved: " + saveOrder.toString());
         return new ResponseEntity<>(saveOrder, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/deleteOrder/{orderId}")
+    public ResponseEntity<Orders> deleteOrder(@PathVariable String orderId) {
+        logger.info("initiating deletion of " + orderId);
+        orderService.deleteById(orderId);
+        logger.info("deleted: " + orderId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

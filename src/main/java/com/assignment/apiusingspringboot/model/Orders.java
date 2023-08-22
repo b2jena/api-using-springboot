@@ -12,26 +12,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "orderRequest")
 public class Orders {
     @Id
-    private int orderId;
-    private String orderStatus;
-    private String name;
+    private String order_id;
+    private String customer;
     private String country;
     private String address;
-    private String productTitle;
-    private String productDescription;
-//    private LocalDateTime date = LocalDateTime.now();
-
+    private String product_title;
+    private String product_description;
+    private String date;
+    private String status;
 
     @Override
     public String toString() {
         return "Orders{" +
-                "orderId=" + orderId +
-                ", orderStatus='" + orderStatus + '\'' +
-                ", name='" + name + '\'' +
+                "order_id=" + order_id +
+                ", customer='" + customer + '\'' +
                 ", country='" + country + '\'' +
                 ", address='" + address + '\'' +
-                ", productTitle='" + productTitle + '\'' +
-                ", productDescription='" + productDescription + '\'' +
+                ", product_title='" + product_title + '\'' +
+                ", product_description='" + product_description + '\'' +
+                ", date='" + date + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

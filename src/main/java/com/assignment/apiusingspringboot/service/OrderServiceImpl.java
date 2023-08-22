@@ -2,63 +2,72 @@ package com.assignment.apiusingspringboot.service;
 
 import com.assignment.apiusingspringboot.model.Orders;
 import com.assignment.apiusingspringboot.repository.OrderRepository;
+import org.owasp.encoder.Encode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
     public OrderRepository orderRepository;
-
-    @Autowired
-    MongoTemplate mongoTemplate;
+    Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
+    // CRUD operation
 
     public OrderServiceImpl() {
     }
 
-    @Override
+    // create
     public Orders placeOrder(Orders orders) {
         try {
-//            orders.setDate(LocalDateTime.now());
-//            System.out.println(orders);
+            orders.setOrder_id(UUID.randomUUID().toString().split("-")[0]);
             orderRepository.save(orders);
-            System.out.println("saved");
+            logger.info("order saved: " + orders);
         } catch (Exception e) {
-            System.out.println(e);
+            logger.error(Encode.forJava(e.getMessage()));
         }
         return orderRepository.save(orders);
     }
 
-    @Override
-    public List<Orders> getOrder(Integer id) {
-        Query query = new Query();
-        query.addCriteria(
-                Criteria
-                        .where("orderId")
-                        .is(id)
-        );
-        List<Orders> order = mongoTemplate.find(query, Orders.class);
-        return order;
+    // read
+    public Orders getOrderById(String id) {
+        return orderRepository.findById(id).get();
     }
 
-    @Override
+    // read all
     public List<Orders> getAllOrders() {
         return orderRepository.findAll();
     }
 
-    @Override
-    public void updateOrder(Integer orderId) {
-        Query query = new Query(Criteria.where("orderId").is(orderId));
-        System.out.println("Order ID = " + orderId);
-        Update updateQuery = new Update();
-        updateQuery.set("orderStatus", "Delivered");
-        mongoTemplate.upsert(query, updateQuery, Orders.class);
+    // read using country
+    public List<Orders> getOrderByCountry(String country) {
+        return orderRepository.findByCountry(country);
+    }
+
+    public List<Orders> getOrderByStatus(String status) {
+        return orderRepository.findByStatus(status);
+    }
+
+    // update
+    public Orders updateOrder(Orders orderRequest) {
+        Orders existingOrder = orderRepository.findById(orderRequest.getOrder_id()).get();
+        existingOrder.setCustomer(orderRequest.getCustomer());
+        existingOrder.setCountry(orderRequest.getCountry());
+        existingOrder.setAddress(orderRequest.getAddress());
+        existingOrder.setProduct_title(orderRequest.getProduct_title());
+        existingOrder.setProduct_description(orderRequest.getProduct_description());
+        existingOrder.setDate(orderRequest.getDate());
+        existingOrder.setStatus(orderRequest.getStatus());
+        return orderRepository.save(existingOrder);
+    }
+
+    // delete
+    public void deleteById(String orderId) {
+        orderRepository.deleteById(orderId);
     }
 }

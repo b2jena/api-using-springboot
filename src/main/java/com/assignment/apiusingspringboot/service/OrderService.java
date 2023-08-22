@@ -11,7 +11,9 @@ public interface OrderService {
 
     List<Orders> getAllOrders();
 
-    void updateOrder(Integer orderID);
+    Orders updateOrder(Orders orders);
 
-    List<Orders> getOrder(Integer id);
+    Orders getOrderById(String orderID);
+
+    void deleteById(String orderID);
 }
