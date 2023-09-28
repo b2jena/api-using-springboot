@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+// i need to remove @CrossOrigin to resolve CWE 942
 @RestController
 @RequestMapping("api/v1/")
 @CrossOrigin(value = "*")
@@ -87,15 +89,16 @@ public class OrderController {
     public ResponseEntity<Orders> createOrder(@RequestBody Orders orders) {
         logger.info("started creating an order...");
         Orders saveOrder = orderService.placeOrder(orders);
-        logger.info("Order saved: " + saveOrder.toString());
-        return new ResponseEntity<>(saveOrder, HttpStatus.CREATED);
+        logger.info("Order saved: " + Encode.forJava(saveOrder.toString()));
+        ResponseEntity<Orders> response = new ResponseEntity<>(saveOrder, HttpStatus.CREATED);
+        return response;
     }
 
     @DeleteMapping("/deleteOrder/{orderId}")
     public ResponseEntity<Orders> deleteOrder(@PathVariable String orderId) {
-        logger.info("initiating deletion of " + orderId);
+        logger.info("initiating deletion of " + Encode.forJava(orderId));
         orderService.deleteById(orderId);
-        logger.info("deleted: " + orderId);
+        logger.info("deleted: " + Encode.forJava(orderId));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

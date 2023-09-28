@@ -27,7 +27,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             orders.setOrder_id(UUID.randomUUID().toString().split("-")[0]);
             orderRepository.save(orders);
-            logger.info("order saved: " + orders);
+            logger.info("order saved: " + Encode.forJava(orders.toString()));
         } catch (Exception e) {
             logger.error(Encode.forJava(e.getMessage()));
         }

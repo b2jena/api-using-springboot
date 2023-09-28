@@ -1,0 +1,8 @@
+GET http://localhost:9901/api/v1/
+GET http://localhost:9901/api/v1/getOrder
+GET http://localhost:9901/api/v1/getOrder/{orderId}
+GET http://localhost:9901/api/v1/orderInformation
+GET http://localhost:9901/api/v1/covidInformation
+PUT http://localhost:9901/api/v1/updateOrder/{orderId}
+POST http://localhost:9901/api/v1/createOrder
+DELETE http://localhost:9901/api/v1/deleteOrder/{orderId}
