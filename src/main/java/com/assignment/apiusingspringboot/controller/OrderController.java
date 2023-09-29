@@ -1,11 +1,15 @@
 package com.assignment.apiusingspringboot.controller;
 
+import com.assignment.apiusingspringboot.model.Jokes;
 import com.assignment.apiusingspringboot.model.LocationStatistics;
 import com.assignment.apiusingspringboot.model.Orders;
 import com.assignment.apiusingspringboot.model.Products;
 import com.assignment.apiusingspringboot.service.OrderService;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.owasp.encoder.Encode;
@@ -27,6 +31,7 @@ import java.util.List;
 public class OrderController {
     private static final String ORDER_DATA_URL = "https://my-json-server.typicode.com/Ved-X/assignment/orders";
     private static final String VIRUS_DATA_URL = "https://api.rootnet.in/covid19-in/stats/latest";
+    private static final String JOKES_DATA_URL = "https://v2.jokeapi.dev/joke/any";
     @Autowired
     OrderService orderService;
     Logger logger = LoggerFactory.getLogger(OrderController.class);
@@ -55,10 +60,8 @@ public class OrderController {
     @GetMapping("/orderInformation")
     public Products[] getOrderData() throws IOException {
         JsonNode jsonNode = new ObjectMapper().readTree(new URL(ORDER_DATA_URL));
-
         logger.info("orderInformation...");
         ObjectMapper mapper = new ObjectMapper();
-
         Products[] prodStats = mapper.treeToValue(jsonNode, Products[].class);
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
@@ -71,11 +74,25 @@ public class OrderController {
     public LocationStatistics[] getCovidData() throws IOException {
         JsonNode jsonNode = new ObjectMapper().readTree(new URL(VIRUS_DATA_URL));
         JsonNode regional = jsonNode.get("data").get("regional");
-
         logger.info("COVID location information");
         ObjectMapper mapper = new ObjectMapper();
         LocationStatistics[] locationStatistics = mapper.treeToValue(regional, LocationStatistics[].class);
         return locationStatistics;
+    }
+
+    @GetMapping("/randomJoke")
+    public Jokes getJokeData() throws IOException {
+        JsonNode jsonNode = new ObjectMapper().readTree(new URL(JOKES_DATA_URL));
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
+        Jokes joke = mapper.treeToValue(jsonNode, Jokes.class);
+        GsonBuilder builder = new GsonBuilder();
+        builder.setPrettyPrinting();
+        Gson gson = builder.create();
+        logger.info("jokes incoming...");
+        logger.info(gson.toJson(joke));
+        return joke;
     }
 
     @PutMapping("/updateOrder/{orderId}")

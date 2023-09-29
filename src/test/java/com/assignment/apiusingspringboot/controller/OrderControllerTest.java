@@ -135,6 +135,23 @@ class OrderControllerTest {
     }
 
     /**
+     * Method under test: {@link OrderController#getJokeData()}
+     */
+    @Test
+    @Disabled("TODO: Complete this test")
+    void testGetJokeData() throws IOException {
+        // TODO: Complete this test.
+        //   Reason: R011 Sandboxing policy violation.
+        //   Diffblue Cover ran code in your project that tried
+        //     to access the network.
+        //   Diffblue Cover's default sandboxing policy disallows this in order to prevent
+        //   your code from damaging your system environment.
+        //   See https://diff.blue/R011 to resolve this issue.
+
+        (new OrderController()).getJokeData();
+    }
+
+    /**
      * Method under test: {@link OrderController#updateOrder(Orders)}
      */
     @Test

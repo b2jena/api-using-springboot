@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Jokes {
-    Boolean error;
-    String category;
-    String type;
-    String setup;
-    String delivery;
-    Flags flags;
-    Long id;
-    Boolean safe;
-    String lang;
+    private Boolean error;
+    private String category;
+    private String type;
+    private String setup;
+    private String delivery;
+    private Flags flags;
+    private Long id;
+    private Boolean safe;
+    private String lang;
 
     @Override
     public String toString() {
@@ -33,6 +33,9 @@ public class Jokes {
                 '}';
     }
 
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
     public static class Flags {
         Boolean nsfw;
         Boolean religious;
@@ -40,63 +43,6 @@ public class Jokes {
         Boolean racist;
         Boolean sexist;
         Boolean explicit;
-
-        public Flags(Boolean nsfw, Boolean religious, Boolean political, Boolean racist, Boolean sexist, Boolean explicit) {
-            this.nsfw = nsfw;
-            this.religious = religious;
-            this.political = political;
-            this.racist = racist;
-            this.sexist = sexist;
-            this.explicit = explicit;
-        }
-
-        public Boolean getNsfw() {
-            return nsfw;
-        }
-
-        public void setNsfw(Boolean nsfw) {
-            this.nsfw = nsfw;
-        }
-
-        public Boolean getReligious() {
-            return religious;
-        }
-
-        public void setReligious(Boolean religious) {
-            this.religious = religious;
-        }
-
-        public Boolean getPolitical() {
-            return political;
-        }
-
-        public void setPolitical(Boolean political) {
-            this.political = political;
-        }
-
-        public Boolean getRacist() {
-            return racist;
-        }
-
-        public void setRacist(Boolean racist) {
-            this.racist = racist;
-        }
-
-        public Boolean getSexist() {
-            return sexist;
-        }
-
-        public void setSexist(Boolean sexist) {
-            this.sexist = sexist;
-        }
-
-        public Boolean getExplicit() {
-            return explicit;
-        }
-
-        public void setExplicit(Boolean explicit) {
-            this.explicit = explicit;
-        }
 
         @Override
         public String toString() {
